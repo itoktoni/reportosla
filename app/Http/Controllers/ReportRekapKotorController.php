@@ -2,36 +2,85 @@
 
 namespace App\Http\Controllers;
 
-use App\Facades\Model\UserModel;
+use App\Dao\Enums\TransactionType;
+use App\Dao\Models\DataBersih;
+use App\Dao\Models\DataKotor;
+use App\Dao\Models\Rs;
 use App\Http\Controllers\Core\ReportController;
 use App\Http\Requests\Core\ReportRequest;
-use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class ReportRekapKotorController extends ReportController
 {
-    public $data;
+    public $kotor;
 
-    public function __construct(UserModel $model)
+    public function __construct(DataKotor $model)
     {
         $this->model = $model::getModel();
     }
 
-    public function getData()
+    protected function beforeForm()
     {
-        $query = $this->model->dataRepository();
+        $rs = Rs::getOptions();
+
+        self::$share = [
+            'rs' => $rs,
+        ];
+    }
+
+    public function getKotor()
+    {
+        $query = DataKotor::query()
+            ->where(Rs::field_primary(), request()->get(Rs::field_primary()))
+            ->where(DataKotor::field_status(), TransactionType::Kotor)
+            ->where(DataKotor::field_beda_rs(), '!=', 1) //1 beda rs, 2 belum register
+            ->where('tanggal', '>=', request()->get('start_date'))
+            ->where('tanggal', '<=', request()->get('end_date'));
+
+        return $query;
+    }
+
+    public function getBersih()
+    {
+        $query = DataBersih::query()
+            ->where(Rs::field_primary(), request()->get(Rs::field_primary()))
+            ->where(DataBersih::field_status(), TransactionType::BersihKotor);
+
+        if ($start_date = request()->start_date) {
+            $bersih_from = Carbon::createFromFormat('Y-m-d', $start_date) ?? false;
+            if ($bersih_from) {
+                $query = $query->where('tanggal', '>=', $bersih_from->addDay(1)->format('Y-m-d'));
+            }
+        }
+
+        if ($end_date = request()->end_date) {
+            $bersih_to = Carbon::createFromFormat('Y-m-d', $end_date) ?? false;
+            if ($bersih_to) {
+                $query = $query->where('tanggal', '<=', $bersih_to->addDay(1)->format('Y-m-d'));
+            }
+        }
 
         return $query;
     }
 
     public function getPrint(ReportRequest $request)
     {
-        dd($request->all());
         set_time_limit(0);
+        ini_set('memory_limit', '512M');
+        $location = $linen = [];
 
-        $this->data = $this->getData($request);
+        $rs = Rs::with([HAS_RUANGAN, HAS_JENIS])->find($request->get(Rs::field_primary()));
+        $location = $rs->has_ruangan;
+        $linen = $rs->has_jenis;
+
+        $kotor = $this->getKotor()->get();
+        $bersih = $this->getBersih()->get();
 
         return moduleView(modulePathPrint(), $this->share([
-            'data' => $this->data,
+            'bersih' => $bersih,
+            'kotor' => $kotor,
+            'location' => $location,
+            'linen' => $linen,
         ]));
     }
 }

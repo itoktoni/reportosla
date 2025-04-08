@@ -4,8 +4,10 @@
             <x-action form="print" />
 
             @bind($model)
-                <x-form-input col="6" type="date" label="Tanggal Awal" name="start_date" />
-                <x-form-input col="6" type="date" label="Tanggal Akhir" name="end_date" />
+                <x-form-select col="6" class="search" name="rs_id" label="Rumah Sakit" :options="$rs" />
+
+                <x-form-input col="3" type="date" label="Tanggal Mulai" name="start_date" />
+                <x-form-input col="3" type="date" label="Tanggal Akhir" name="end_date" />
             @endbind
 
         </x-card>

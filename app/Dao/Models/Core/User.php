@@ -57,6 +57,7 @@ class User extends Authenticatable implements AuthMustVerifyEmail
         'vendor',
         'active',
         'email_verified_at',
+        'rs_id',
     ];
 
     public $sortable = [

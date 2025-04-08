@@ -26,6 +26,8 @@ define('ERROR_PERMISION', 'Maaf anda tidak punya otorisasi untuk melakukan hal i
 
 define('UPLOAD', 'upload');
 define('KEY', 'key');
+define('HAS_RUANGAN', 'has_ruangan');
+define('HAS_JENIS', 'has_jenis');
 
 function module($module = null)
 {

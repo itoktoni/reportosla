@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Dao\Models\Rs;
 use App\Facades\Model\UserModel;
 use App\Http\Controllers\Core\ReportController;
-use App\Jobs\JobExportCsvUser;
 use Illuminate\Http\Request;
 
 class ReportUserController extends ReportController

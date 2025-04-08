@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Core;
 
+use App\Dao\Models\Rs;
 use App\Facades\Model\RoleModel;
 use App\Facades\Model\UserModel;
 use App\Http\Requests\Core\LoginRequest;
@@ -25,8 +26,10 @@ class UserController extends MasterController
     protected function beforeForm()
     {
         $roles = RoleModel::getOptions();
+        $rs = Rs::getOptions();
 
         self::$share = [
+            'rs' => $rs,
             'roles' => $roles,
         ];
     }
