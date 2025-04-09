@@ -144,7 +144,12 @@ class SummaryData extends Command
             ->first();
 
         $validation = ($summary_kotor->qty == $transaksi_kotor->qty) && ($summary_bersih->qty == $transaksi_bersih->qty);
-        Log::info($validation, 'validation Cek summary');
+        Log::info($validation, [
+            'summary_kotor' => $summary_kotor->qty,
+            'transaksi_kotor' => $transaksi_kotor->qty,
+            'summary_bersih' => $summary_bersih->qty,
+            'transaksi_bersih' => $transaksi_bersih->qty
+        ]);
 
         return $validation;
     }
