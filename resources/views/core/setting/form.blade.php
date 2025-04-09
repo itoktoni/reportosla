@@ -15,7 +15,6 @@
                     <x-form-input col="2" style="height: 40px" type="color" value="{{ env('APP_COLOR') }}" label="Color" name="color" />
                     <x-form-input col="4" value="{{ env('APP_URL') }}" label="Website URL" name="url" />
 
-
                     <x-form-select col="2" name="app_auth" :default="env('APP_AUTH')" label="Login Auth"
                     :options="$active" />
                     <x-form-input col="2" value="{{ env('CSV_DELIMITER') }}" label="csv delimiter" name="csv_delimiter" />
@@ -23,17 +22,15 @@
 
                     <x-form-upload col="3" name="logo" />
                     <div class="col-md-3">
-                        <img class="img-thumbnail img-fluid"
-                            src="{{ env('APP_LOGO') ? url('storage/' . env('APP_LOGO')) : url('assets/media/image/logo.png') }}"
-                            alt="">
+                        <img class="img-thumbnail img-fluid mt-3" src="{{ logoUrl() }}" alt="Logo">
                     </div>
 
 
                     <x-form-upload col="3" name="background" />
                     <div class="col-md-3">
-                        <img class="img-thumbnail img-fluid"
-                            src="{{ env('APP_BACKGROUND') ? url('storage/' . env('APP_BACKGROUND')) : url('assets/media/image/logo.png') }}"
-                            alt="">
+                        <img class="mt-4 img-thumbnail img-fluid"
+                            src="{{ logoUrl(false) }}"
+                            alt="background">
                     </div>
 
                 @endbind
