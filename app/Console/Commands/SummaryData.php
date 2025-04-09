@@ -143,7 +143,10 @@ class SummaryData extends Command
             ->whereNotNull('transaksi_delivery')
             ->first();
 
-        return ($summary_kotor->qty == $transaksi_kotor->qty) && ($summary_bersih->qty == $transaksi_bersih->qty);
+        $validation = ($summary_kotor->qty == $transaksi_kotor->qty) && ($summary_bersih->qty == $transaksi_bersih->qty);
+        Log::info($validation, 'validation Cek summary');
+
+        return $validation;
     }
 
     /**
