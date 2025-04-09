@@ -73,6 +73,7 @@
                             $total_ruangan = $kotor
                             ->where('ruangan_id', $loc->ruangan_id)
                             ->where('jenis_id', $jenis->jenis_id)
+                            ->where('beda_rs', 0)
                             ->sum('qty');
                             @endphp
                             {{ $total_ruangan > 0 ? $total_ruangan : '' }}
@@ -84,6 +85,7 @@
                         @php
                         $total_kotor = $kotor
                             ->where('jenis_id', $jenis->jenis_id)
+                            ->where('beda_rs', 0)
                             ->sum('qty');
                         @endphp
                         {{ $total_kotor > 0 ? $total_kotor : '' }}
@@ -112,17 +114,18 @@
 			@endforelse
             <tr>
                 <td>{{ $total_number + 1 }}</td>
-                <td>Belum Register</td>
+                <td>Belum Register / Beda Rs</td>
                 @foreach($location as $loc)
                 <td></td>
                 @endforeach
                 <td>
                 @php
-                $total_belum_register = $kotor->where('jenis_id', '000')->sum('qty');
+                $total_belum_register = $kotor->where('beda_rs', 2)->sum('qty');
+                $total_beda_rs = $kotor->where('beda_rs', 1)->sum('qty');
                 @endphp
                 {{ $total_belum_register > 0 ? $total_belum_register : '0' }}
                 </td>
-                <td></td>
+                <td>{{ $total_beda_rs }}</td>
                 <td>{{ $total_belum_register }}</td>
                 <td></td>
                 <td></td>

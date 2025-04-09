@@ -33,7 +33,6 @@ class ReportRekapKotorController extends ReportController
         $query = DataKotor::query()
             ->where(Rs::field_primary(), request()->get(Rs::field_primary()))
             ->where(DataKotor::field_status(), TransactionType::Kotor)
-            ->where(DataKotor::field_beda_rs(), '!=', 1) //1 beda rs, 2 belum register
             ->where('tanggal', '>=', request()->get('start_date'))
             ->where('tanggal', '<=', request()->get('end_date'));
 
@@ -77,6 +76,7 @@ class ReportRekapKotorController extends ReportController
         $bersih = $this->getBersih()->get();
 
         return moduleView(modulePathPrint(), $this->share([
+            'rs' => $rs,
             'bersih' => $bersih,
             'kotor' => $kotor,
             'location' => $location,
