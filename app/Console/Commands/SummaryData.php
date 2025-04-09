@@ -53,18 +53,18 @@ class SummaryData extends Command
                 COALESCE(detail_id_ruangan, '000'),
                 COALESCE(detail_id_jenis, '000'),
                 transaksi_bersih,
-                date(transaksi_report)
+                transaksi_report
             ) AS id,
             transaksi_rs_ori AS rs_id,
             COALESCE(detail_id_ruangan, '000') AS ruangan_id,
             COALESCE(detail_id_jenis, '000') AS jenis_id,
             transaksi_bersih AS status,
-            date(transaksi_report) AS tanggal,
+            transaksi_report AS tanggal,
             COUNT( transaksi_rfid ) AS qty
         FROM transaksi
             JOIN detail ON detail_rfid = transaksi_rfid
         WHERE
-            date(transaksi_report) >= ( CURDATE() - INTERVAL $day DAY )
+            transaksi_report >= ( CURDATE() - INTERVAL $day DAY )
             AND transaksi_bersih IN (4,5,6) -- BERSIH
             AND transaksi_delivery IS NOT NULL
         GROUP BY
@@ -72,7 +72,7 @@ class SummaryData extends Command
             detail_id_ruangan,
             detail_id_jenis,
             transaksi_bersih,
-            date(transaksi_report);
+            transaksi_report;
 
         SQL;
     }
@@ -98,7 +98,7 @@ class SummaryData extends Command
                 COUNT( transaksi_rfid ) AS qty
             FROM
                 transaksi
-            JOIN
+            LEFT JOIN
                 detail ON detail_rfid = transaksi_rfid
             WHERE
                 DATE(transaksi_created_at) >= ( CURDATE() - INTERVAL $day DAY )
